@@ -24,8 +24,8 @@ public class AssignController {
         DateInfo dateInfo = retry(this::getDateInfo);
         WorkersInfo workersInfo = retry(this::getWorkersInfo);
         AssignManager assignManager = new AssignManager(workersInfo.weekday(), workersInfo.weekend());
-        // dateInfo의 month와 CustomDayOfWeek을 사용해야함.. // 근데...
-        assignManager.assign(dateInfo.month(), dateInfo.startDayOfWeek());
+        Workers assignment = assignManager.assign(dateInfo.month(), dateInfo.startDayOfWeek());
+        
     }
 
     private DateInfo getDateInfo() {

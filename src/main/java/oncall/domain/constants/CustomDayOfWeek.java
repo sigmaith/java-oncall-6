@@ -27,4 +27,15 @@ public enum CustomDayOfWeek {
                 .findFirst()
                 .orElseThrow(() -> CustomException.from(INVALID_INPUT_ERROR));
     }
+
+    public static CustomDayOfWeek from(final int ordinal) {
+        return Arrays.stream(values())
+                .filter(day -> day.ordinal() == ordinal)
+                .findFirst()
+                .orElseThrow(() -> CustomException.from(INVALID_INPUT_ERROR));
+    }
+
+    public boolean isWeekend() {
+        return isWeekend;
+    }
 }

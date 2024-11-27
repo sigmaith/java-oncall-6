@@ -38,8 +38,20 @@ public class Workers {
         return workers.isEmpty();
     }
 
-    public void addWorker(final Worker worker) {
-        workers.addLast(worker);
+    public void offerLastWorker(final Worker worker) {
+        workers.offerLast(worker);
+    }
+
+    public Worker pollFirstWorker() {
+        return workers.pollFirst();
+    }
+
+    public Worker peekLastWorker() {
+        return workers.peekLast();
+    }
+
+    public Worker peekFirstWorker() {
+        return workers.peekFirst();
     }
 
     private Deque<Worker> getWorkers() {
