@@ -38,4 +38,8 @@ public enum CustomDayOfWeek {
     public boolean isWeekend() {
         return isWeekend;
     }
+
+    public String getKoreanName() {
+        return name;
+    }
 }

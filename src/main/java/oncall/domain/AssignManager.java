@@ -15,11 +15,11 @@ public class AssignManager {
         this.weekend = weekend;
     }
 
-    public Workers assign(final Month month, final CustomDayOfWeek customDayOfWeek) {
+    public Workers assign(final Month month, final CustomDayOfWeek startDayOfWeek) {
         Workers assignedWorkers = new Workers();
-        int criteria = customDayOfWeek.ordinal();
+        int criteria = startDayOfWeek.ordinal();
         for (int date = 1; date <= month.minLength(); date++) {
-            CustomDayOfWeek day = CustomDayOfWeek.from(criteria + (date - 1));
+            CustomDayOfWeek day = CustomDayOfWeek.from((criteria + (date - 1)) % 7);
             if (!day.isWeekend() && !Holiday.isHoliday(month, date)) { // 평일인 경우
                 assignWhenWeekdays(assignedWorkers);
             }
@@ -42,7 +42,7 @@ public class AssignManager {
             mustUsedWeekday = null;
             return;
         }
-        processWhenContinuousWorkWeekday(assignedWorkers); // 중복일때작업
+        processWhenContinuousWorkWeekday(assignedWorkers); // 중복될때
     }
 
     private boolean isDuplicatedWeekdayWorker(final Workers assignedWorkers) {
@@ -70,7 +70,7 @@ public class AssignManager {
             mustUsedWeekday = null;
             return;
         }
-        processWhenContinuousWorkWeekend(assignedWorkers); // todo: 중복될때
+        processWhenContinuousWorkWeekend(assignedWorkers); // 중복될때
     }
 
     private boolean isDuplicatedWeekendWorker(final Workers assignedWorkers) {
