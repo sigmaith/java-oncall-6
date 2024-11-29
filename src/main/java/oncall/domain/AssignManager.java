@@ -1,7 +1,8 @@
 package oncall.domain;
 
 import java.time.Month;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import oncall.controller.dto.DateInfo;
 import oncall.domain.constants.CustomDayOfWeek;
@@ -19,7 +20,7 @@ public class AssignManager {
     }
 
     public Workers assign(DateInfo dateInfo) {
-        Workers assignment = Workers.from(new ArrayList<>());
+        Deque<Worker> assignment = new ArrayDeque<>(); // 바로 new Workers 못함 (5명 이상, 35명 이하 제한)
         int criteria = dateInfo.customDayOfWeek().ordinal();
         Month month = dateInfo.month();
         for (int date = 1; date <= month.minLength(); date++) {
@@ -27,10 +28,10 @@ public class AssignManager {
             processInWeekday(new DateInfo(month, today), date, assignment);
             processInHoliday(new DateInfo(month, today), date, assignment);
         }
-        return assignment;
+        return new Workers(assignment);
     }
 
-    private void processInWeekday(DateInfo dateInfo, int date, Workers assignment) { // 평일 process
+    private void processInWeekday(DateInfo dateInfo, int date, Deque<Worker> assignment) { // 평일 process
         if (!isHoliday(dateInfo, date)) {
             if (isInDangerContinuousWork(assignment, weekday)) {
                 processInDangerWeekday(assignment);
@@ -40,7 +41,7 @@ public class AssignManager {
         }
     }
 
-    private void processInHoliday(DateInfo dateInfo, int date, Workers assignment) { // 주말/공휴일 process
+    private void processInHoliday(DateInfo dateInfo, int date, Deque<Worker> assignment) { // 주말/공휴일 process
         if (isHoliday(dateInfo, date)) {
             if (isInDangerContinuousWork(assignment, weekend)) {
                 processInDangerWeekend(assignment);
@@ -54,38 +55,38 @@ public class AssignManager {
         return dateInfo.customDayOfWeek().isWeekend() || Holiday.isHoliday(dateInfo.month(), date);
     }
 
-    private boolean isInDangerContinuousWork(Workers assignment, Workers resource) {
+    private boolean isInDangerContinuousWork(Deque<Worker> assignment, Workers resource) {
         return Objects.equals(assignment.peekLast(), resource.peekFirst());
     }
 
-    private void processInDangerWeekday(Workers assignment) {
+    private void processInDangerWeekday(Deque<Worker> assignment) {
         Worker danger = weekday.pollFirst(), safe = weekday.pollFirst();
-        assignment.offerLast(safe);
+        assignment.add(safe);
         weekday.offerLast(danger);
         weekday.offerLast(safe);
         weekdayMustAssigned = danger;
     }
 
-    private void processNotInDangerWeekday(Workers assignment) {
+    private void processNotInDangerWeekday(Deque<Worker> assignment) {
         if (weekdayMustAssigned != null) {
-            assignment.offerLast(weekdayMustAssigned);
+            assignment.add(weekdayMustAssigned);
             weekdayMustAssigned = null;
             return;
         }
         Worker worker = weekday.pollFirst();
-        assignment.offerLast(worker);
+        assignment.add(worker);
         weekday.offerLast(worker);
     }
 
-    private void processInDangerWeekend(Workers assignment) {
+    private void processInDangerWeekend(Deque<Worker> assignment) {
         Worker danger = weekend.pollFirst(), safe = weekend.pollFirst();
-        assignment.offerLast(safe);
+        assignment.add(safe);
         weekend.offerLast(danger);
         weekend.offerLast(safe);
         weekendMustAssigned = danger;
     }
 
-    private void processNotInDangerWeekend(Workers assignment) {
+    private void processNotInDangerWeekend(Deque<Worker> assignment) {
         if (weekendMustAssigned != null) {
             assignment.offerLast(weekendMustAssigned);
             weekendMustAssigned = null;

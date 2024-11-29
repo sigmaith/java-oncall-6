@@ -26,7 +26,8 @@ public class AssignController {
         DateInfo dateInfo = retry(this::getDateInfo);
         WorkersInfo workersInfo = retry(this::getWorkers);
         AssignManager assignManager = new AssignManager(workersInfo.weekday(), workersInfo.weekend());
-        assignManager.assign(dateInfo);
+        Workers assignment = assignManager.assign(dateInfo);
+        outputView.printAssignment(assignment, dateInfo);
     }
 
     private DateInfo getDateInfo() {

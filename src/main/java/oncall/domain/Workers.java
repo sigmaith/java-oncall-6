@@ -12,11 +12,11 @@ import oncall.exception.ErrorMessage;
 public class Workers {
     private final Deque<Worker> workers;
 
-    public static Workers from(final List<String> workerNames) {
-        return new Workers(workerNames);
+    public Workers(final Deque<Worker> assignment) {
+        this.workers = new ArrayDeque<>(assignment);
     }
 
-    private Workers(final List<String> workerNames) {
+    public Workers(final List<String> workerNames) {
         validateNoDuplicates(workerNames);
         validateLength(workerNames);
         this.workers = new ArrayDeque<>(workerNames.stream().map(Worker::from).toList());

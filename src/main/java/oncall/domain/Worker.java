@@ -37,4 +37,9 @@ public class Worker {
     public int hashCode() {
         return Objects.hash(nickName);
     }
+
+    @Override
+    public String toString() {
+        return nickName;
+    }
 }
