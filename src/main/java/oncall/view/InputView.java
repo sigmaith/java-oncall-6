@@ -5,6 +5,7 @@ import static camp.nextstep.edu.missionutils.Console.readLine;
 import java.util.Arrays;
 import java.util.List;
 import oncall.controller.dto.RawDateInfo;
+import oncall.domain.Workers;
 import oncall.exception.CustomException;
 import oncall.exception.ErrorMessage;
 
@@ -38,5 +39,17 @@ public class InputView {
         } catch (NumberFormatException e) {
             throw CustomException.from(ErrorMessage.INVALID_INPUT);
         }
+    }
+
+    public Workers askWorkersWeekday() {
+        System.out.print("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ");
+        List<String> workerNames = convertArrayToList(readLine().split(",", -1));
+        return Workers.from(workerNames);
+    }
+
+    public Workers askWorkersWeekend() {
+        System.out.print("휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ");
+        List<String> workerNames = convertArrayToList(readLine().split(",", -1));
+        return Workers.from(workerNames);
     }
 }
