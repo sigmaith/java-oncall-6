@@ -92,7 +92,7 @@ public class AssignManager {
             weekendMustAssigned = null;
             return;
         }
-        Worker worker = weekend.peekFirst();
+        Worker worker = weekend.pollFirst();
         assignment.offerLast(worker);
         weekend.offerLast(worker);
     }
