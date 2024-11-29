@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import oncall.controller.dto.DateInfo;
 import oncall.controller.dto.RawDateInfo;
 import oncall.controller.dto.WorkersInfo;
+import oncall.domain.AssignManager;
 import oncall.domain.Workers;
 import oncall.domain.constants.CustomDayOfWeek;
 import oncall.view.InputView;
@@ -24,6 +25,8 @@ public class AssignController {
     public void run() {
         DateInfo dateInfo = retry(this::getDateInfo);
         WorkersInfo workersInfo = retry(this::getWorkers);
+        AssignManager assignManager = new AssignManager(workersInfo.weekday(), workersInfo.weekend());
+        assignManager.assign(dateInfo);
     }
 
     private DateInfo getDateInfo() {

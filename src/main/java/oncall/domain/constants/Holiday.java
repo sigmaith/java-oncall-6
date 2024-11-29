@@ -1,6 +1,7 @@
 package oncall.domain.constants;
 
 import java.time.Month;
+import java.util.Arrays;
 
 public enum Holiday {
     NEW_YEARS_DAY(Month.JANUARY, 1),
@@ -17,5 +18,13 @@ public enum Holiday {
     Holiday(final Month month, final int date) {
         this.month = month;
         this.date = date;
+    }
+
+    public static boolean isHoliday(final Month month, final int date) {
+        return Arrays.stream(values()).anyMatch(holiday -> holiday.matchesWith(month, date));
+    }
+
+    private boolean matchesWith(final Month month, final int date) {
+        return this.month.equals(month) && this.date == date;
     }
 }

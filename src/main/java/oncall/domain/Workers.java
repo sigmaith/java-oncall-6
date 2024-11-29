@@ -46,4 +46,20 @@ public class Workers {
     private Deque<Worker> getWorkers() {
         return workers;
     }
+
+    public Worker peekLast() {
+        return workers.peekLast();
+    }
+
+    public Worker peekFirst() {
+        return workers.peekFirst();
+    }
+
+    public void offerLast(Worker worker) {
+        workers.offerLast(worker);
+    }
+
+    public Worker pollFirst() {
+        return workers.pollFirst();
+    }
 }
